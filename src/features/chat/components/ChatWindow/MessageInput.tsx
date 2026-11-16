@@ -203,7 +203,7 @@ export function MessageInput({ conversationId }: { conversationId: string }) {
           <SendHorizontal className="h-4 w-4" />
         </button>
       </div>
-      <p className="mt-1.5 text-[11px] text-[var(--text-muted)]">
+      <p className="mt-1.5 hidden text-[11px] text-[var(--text-muted)] lg:block">
         Enter to send · Shift+Enter for new line · Esc to cancel
       </p>
     </form>
