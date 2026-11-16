@@ -1,0 +1,72 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --canvas: #eef1f4;
+  --surface: #ffffff;
+  --surface-muted: #f4f6f8;
+  --border: #dde3ea;
+  --text: #15202b;
+  --text-muted: #667788;
+  --accent: #0f766e;
+  --accent-soft: #ccfbf1;
+  --bubble-mine: #0f766e;
+  --bubble-mine-text: #ffffff;
+  --bubble-theirs: #ffffff;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  color: var(--text);
+  background: var(--canvas);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.dark {
+  --canvas: #0b1220;
+  --surface: #121a2a;
+  --surface-muted: #1a2438;
+  --border: #2a3650;
+  --text: #e8eef7;
+  --text-muted: #94a3b8;
+  --accent: #2dd4bf;
+  --accent-soft: #134e4a;
+  --bubble-mine: #0f766e;
+  --bubble-mine-text: #f0fdfa;
+  --bubble-theirs: #1a2438;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  min-width: 320px;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--text-muted) 40%, transparent);
+  border-radius: 999px;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 35%, transparent);
+}
