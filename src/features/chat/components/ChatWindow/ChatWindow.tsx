@@ -10,7 +10,7 @@ import { ChatHeader } from '@/features/chat/components/ChatWindow/ChatHeader'
 import { MessageList } from '@/features/chat/components/ChatWindow/MessageList'
 import { MessageInput } from '@/features/chat/components/ChatWindow/MessageInput'
 import { TypingIndicator } from '@/features/chat/components/ChatWindow/TypingIndicator'
-import { GroupInfoPanel } from '@/features/chat/components/Group/GroupInfoPanel'
+import { ProfileInfoPanel } from '@/features/chat/components/Profile/ProfileInfoPanel'
 import { EmptyState } from '@/shared/components/EmptyState'
 import { cn } from '@/shared/utils/cn'
 
@@ -18,7 +18,7 @@ export function ChatWindow() {
   const dispatch = useAppDispatch()
   const conversation = useAppSelector(selectActiveConversation)
   const showMobileChat = useAppSelector((s) => s.ui.showMobileChat)
-  const showGroupPanel = useAppSelector((s) => s.ui.showGroupPanel)
+  const showProfilePanel = useAppSelector((s) => s.ui.showProfilePanel)
   const loadedStatus = useAppSelector((s) =>
     conversation
       ? s.messages.statusByConversation[conversation.id]
@@ -56,11 +56,16 @@ export function ChatWindow() {
   return (
     <section
       className={cn(
-        'hidden h-full min-w-0 flex-1 md:flex',
+        'relative hidden h-full min-w-0 flex-1 md:flex',
         showMobileChat && 'flex',
       )}
     >
-      <div className="flex h-full min-w-0 flex-1 flex-col bg-[var(--canvas)]">
+      <div
+        className={cn(
+          'flex h-full min-w-0 flex-1 flex-col bg-[var(--canvas)]',
+          showProfilePanel && 'hidden md:flex',
+        )}
+      >
         <ChatHeader conversation={conversation} />
         <div className="min-h-0 flex-1">
           <MessageList conversationId={conversation.id} />
@@ -68,9 +73,7 @@ export function ChatWindow() {
         <TypingIndicator conversation={conversation} />
         <MessageInput conversationId={conversation.id} />
       </div>
-      {conversation.type === 'group' && showGroupPanel && (
-        <GroupInfoPanel conversation={conversation} />
-      )}
+      {showProfilePanel && <ProfileInfoPanel conversation={conversation} />}
     </section>
   )
 }

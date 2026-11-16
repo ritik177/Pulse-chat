@@ -4,7 +4,7 @@ import type { UserStatus } from '@/features/chat/types'
 interface AvatarProps {
   name: string
   src?: string
-  size?: 'sm' | 'md' | 'lg'
+  size?: 'sm' | 'md' | 'lg' | 'xl'
   status?: UserStatus
   className?: string
 }
@@ -13,6 +13,7 @@ const sizeMap = {
   sm: 'h-8 w-8 text-xs',
   md: 'h-10 w-10 text-sm',
   lg: 'h-12 w-12 text-base',
+  xl: 'h-28 w-28 text-3xl',
 }
 
 const statusColor: Record<UserStatus, string> = {

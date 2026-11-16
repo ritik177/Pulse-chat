@@ -10,7 +10,7 @@ interface UiState {
   theme: ThemeMode
   replyToId: string | null
   editingMessageId: string | null
-  showGroupPanel: boolean
+  showProfilePanel: boolean
   showMobileChat: boolean
   isOnline: boolean
 }
@@ -33,7 +33,7 @@ const initialState: UiState = {
   theme: typeof window !== 'undefined' ? detectTheme() : 'light',
   replyToId: null,
   editingMessageId: null,
-  showGroupPanel: false,
+  showProfilePanel: false,
   showMobileChat: false,
   isOnline: typeof navigator !== 'undefined' ? navigator.onLine : true,
 }
@@ -45,13 +45,23 @@ const uiSlice = createSlice({
     hydrateUi(state, action: PayloadAction<Partial<UiState>>) {
       Object.assign(state, action.payload)
     },
-    setActiveConversation(state, action: PayloadAction<string | null>) {
-      state.activeConversationId = action.payload
+    setActiveConversation(
+      state,
+      action: PayloadAction<string | null | { id: string | null; keepProfileOpen?: boolean }>,
+    ) {
+      const payload = action.payload
+      const id = typeof payload === 'string' || payload === null ? payload : payload.id
+      const keepProfileOpen =
+        typeof payload === 'object' && payload !== null
+          ? Boolean(payload.keepProfileOpen)
+          : false
+
+      state.activeConversationId = id
       state.replyToId = null
       state.editingMessageId = null
       state.messageSearchQuery = ''
-      state.showMobileChat = action.payload !== null
-      if (action.payload) state.showGroupPanel = false
+      state.showMobileChat = id !== null
+      if (id && !keepProfileOpen) state.showProfilePanel = false
     },
     setFilter(state, action: PayloadAction<ConversationFilter>) {
       state.filter = action.payload
@@ -86,11 +96,11 @@ const uiSlice = createSlice({
       state.editingMessageId = action.payload
       state.replyToId = null
     },
-    toggleGroupPanel(state) {
-      state.showGroupPanel = !state.showGroupPanel
+    toggleProfilePanel(state) {
+      state.showProfilePanel = !state.showProfilePanel
     },
-    setShowGroupPanel(state, action: PayloadAction<boolean>) {
-      state.showGroupPanel = action.payload
+    setShowProfilePanel(state, action: PayloadAction<boolean>) {
+      state.showProfilePanel = action.payload
     },
     setShowMobileChat(state, action: PayloadAction<boolean>) {
       state.showMobileChat = action.payload
@@ -112,8 +122,8 @@ export const {
   toggleTheme,
   setReplyTo,
   setEditingMessage,
-  toggleGroupPanel,
-  setShowGroupPanel,
+  toggleProfilePanel,
+  setShowProfilePanel,
   setShowMobileChat,
   setIsOnline,
 } = uiSlice.actions

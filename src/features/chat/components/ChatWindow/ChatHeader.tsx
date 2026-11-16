@@ -1,10 +1,10 @@
-import { ArrowLeft, Info, Search, X } from 'lucide-react'
+import { ArrowLeft, Search, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import {
   setMessageSearchQuery,
   setShowMobileChat,
-  toggleGroupPanel,
+  setShowProfilePanel,
 } from '@/features/chat/slice/uiSlice'
 import type { Conversation } from '@/features/chat/types'
 import { Avatar } from '@/shared/components/Avatar'
@@ -37,6 +37,8 @@ export function ChatHeader({ conversation }: { conversation: Conversation }) {
           ? 'Away'
           : 'Offline'
 
+  const openProfile = () => dispatch(setShowProfilePanel(true))
+
   return (
     <header className="flex items-center gap-3 border-b border-[var(--border)] bg-[var(--surface)] px-3 py-3 md:px-4">
       <button
@@ -48,18 +50,28 @@ export function ChatHeader({ conversation }: { conversation: Conversation }) {
         <ArrowLeft className="h-5 w-5" />
       </button>
 
-      <Avatar
-        name={conversation.name}
-        src={conversation.avatarUrl ?? peer?.avatarUrl}
-        status={conversation.type === 'direct' ? peer?.status : undefined}
-      />
-
-      <div className="min-w-0 flex-1">
-        <h2 className="truncate font-semibold text-[var(--text)]">
-          {conversation.name}
-        </h2>
-        <p className="truncate text-xs text-[var(--text-muted)]">{subtitle}</p>
-      </div>
+      <button
+        type="button"
+        onClick={openProfile}
+        className="flex min-w-0 flex-1 items-center gap-3 rounded-xl px-1 py-0.5 text-left transition hover:bg-[var(--surface-muted)]"
+        aria-label={
+          conversation.type === 'group'
+            ? `Open group info for ${conversation.name}`
+            : `Open contact info for ${conversation.name}`
+        }
+      >
+        <Avatar
+          name={conversation.name}
+          src={conversation.avatarUrl ?? peer?.avatarUrl}
+          status={conversation.type === 'direct' ? peer?.status : undefined}
+        />
+        <div className="min-w-0 flex-1">
+          <h2 className="truncate font-semibold text-[var(--text)]">
+            {conversation.name}
+          </h2>
+          <p className="truncate text-xs text-[var(--text-muted)]">{subtitle}</p>
+        </div>
+      </button>
 
       {searchOpen ? (
         <div className="flex items-center gap-1">
@@ -91,17 +103,6 @@ export function ChatHeader({ conversation }: { conversation: Conversation }) {
           className="rounded-lg p-2 text-[var(--text-muted)] hover:bg-[var(--surface-muted)]"
         >
           <Search className="h-4 w-4" />
-        </button>
-      )}
-
-      {conversation.type === 'group' && (
-        <button
-          type="button"
-          aria-label="Group info"
-          onClick={() => dispatch(toggleGroupPanel())}
-          className="rounded-lg p-2 text-[var(--text-muted)] hover:bg-[var(--surface-muted)]"
-        >
-          <Info className="h-4 w-4" />
         </button>
       )}
     </header>

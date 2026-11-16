@@ -11,6 +11,8 @@ export interface User {
   name: string
   avatarUrl: string
   status: UserStatus
+  phone?: string
+  about?: string
   lastSeenAt?: string
 }
 
